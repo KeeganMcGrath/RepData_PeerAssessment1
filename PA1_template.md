@@ -1,14 +1,10 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ##Loading and preprocessing the data
 
-```{r}
+
+```r
 setwd("~/RepData_PeerAssessment1/")
 unzip("activity.zip")
 activity_data <- read.csv ("activity.csv", stringsAsFactors = FALSE)
@@ -18,7 +14,8 @@ activity_data[ ,2] <- as.Date(activity_data[ ,2],format = "%Y-%m-%d")
 ##What is mean total number of steps taken per day?
 
 A Histogram of the Total Number of Steps Taken per Day
-```{r}
+
+```r
 naremove_dataset <- na.omit (activity_data)
 split_dataframe <- split (naremove_dataset,naremove_dataset$date)
 
@@ -34,19 +31,32 @@ hist(sum_vec,
      breaks = 10)
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
 The mean Total Number of Steps Taken per Day
-```{r}
+
+```r
 mean (sum_vec)
 ```
 
+```
+## [1] 10766.19
+```
+
 The median Total Number of Steps Taken per Day
-```{r}
+
+```r
 median (sum_vec)
+```
+
+```
+## [1] 10765
 ```
 
 ##What is the average daily activity pattern?
 
-```{r}
+
+```r
 interval_times <- naremove_dataset[1:288,3]
 interval_means <- NULL
 for (i in 1:288) {
@@ -57,21 +67,34 @@ par(mfcol = c(1,1))
 plot(interval_times,interval_means,type = "l",xlab = "Interval", ylab = "Number of Steps")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+
 The 5 Minute interval that on average contains the most steps
-```{r}
+
+```r
 naremove_dataset[which(interval_means==max(interval_means)),3]
+```
+
+```
+## [1] 835
 ```
 
 ##Imputing Missing Values with the mean of the interval corresponding to the missing value
 
 Total number of NA's in data set
-```{r}
+
+```r
 sum(is.na(activity_data[ ,1]))
+```
+
+```
+## [1] 2304
 ```
 
 Imputing values for the missing values
 
-```{r}
+
+```r
 imputna_dataset <- activity_data
 for(i in 1:nrow(activity_data)) {
       if ( is.na(activity_data[i,1])==TRUE) {
@@ -83,7 +106,8 @@ for(i in 1:nrow(activity_data)) {
 
 A histogram of the total number of steps taken per day
 
-```{r}
+
+```r
 split_nadataframe <- split (imputna_dataset,imputna_dataset$date)
 
 sumna_vec <- NULL
@@ -98,23 +122,36 @@ hist(sumna_vec,
      breaks = 10)
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+
 Mean total number of steps taken per day
 
-```{r}
+
+```r
 mean (sumna_vec)
+```
+
+```
+## [1] 10766.19
 ```
 
 Median total number of steps taken per day
 
-```{r}
+
+```r
 median (sumna_vec)
+```
+
+```
+## [1] 10766.19
 ```
 
 These mean and median do not differ from the original mean and median where I ignored the NA values because I replaced the NA's by the interval means.  Imputing values for the missing values did not affect our estimates of the total daily number of steps.
 
 ##Are there differences in activity patterns between weekdays and weekends?
 ### 
-```{r}
+
+```r
 Weekdays_vec<-c("Monday" , "Tuesday" , "Wednesday" , "Thursday" , "Friday")
 imputna_dataset[ ,4] <- NA
 colnames(imputna_dataset) <- c("steps","date","interval","day of week")
@@ -146,3 +183,5 @@ plot(interval_times,weekday_interval_means,
 plot(interval_times,weekend_interval_means, 
      main = "Weekends",type = "l",xlab = "Intervals", ylab = "Weekend Interval Mean Steps",col = "blue")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
